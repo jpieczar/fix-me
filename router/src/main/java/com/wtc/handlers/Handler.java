@@ -76,7 +76,6 @@ public class Handler implements Runnable {
         id = table.addNewClient(socket);
         table.sendMessage(id, "CONNECTION ESTABLISHED");
         table.sendMessage(id, "ID: "+ id);
-
     }
     
 }
