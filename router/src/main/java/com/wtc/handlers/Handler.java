@@ -18,9 +18,12 @@ public class Handler implements Runnable {
     private Socket socket;
     private Scanner in;
     private PrintWriter out;
+    private IDTable table;
+    private int id;
 
     public Handler(Socket socket){
         this.socket = socket;
+        this.table = IDTable.getTable();
     }
 
     /**
@@ -45,14 +48,15 @@ public class Handler implements Runnable {
                 System.out.println(in.nextLine());
 
                 // send response to the client.
-                IDTable.getTable().sendMessage(socket.getPort(), "Message recieve.");
+                table.sendMessage(socket.getPort(), "Message recieve.");
             }
         } catch (Exception E) {
             System.out.println(E);
         }
         finally {
             // Remove the socket from the table of clients.
-            IDTable.getTable().removeClient(socket.getPort());
+            table.removeClient(socket.getPort());
+
 
             //close the socket.
             try{
@@ -69,8 +73,9 @@ public class Handler implements Runnable {
      * giving them an ID. 
      * */
     private void initConnection() throws IOException {
-        IDTable.getTable().addNewClient(socket);
-        IDTable.getTable().sendMessage(socket.getPort(), "Connection was succesfull");
+        id = table.addNewClient(socket);
+        table.sendMessage(id, "CONNECTION ESTABLISHED");
+        table.sendMessage(id, "ID: "+ id);
 
     }
     
