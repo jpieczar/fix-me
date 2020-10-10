@@ -3,24 +3,26 @@ package com.wtc.fixprotocol;
 import java.time.LocalTime;
 import java.lang.StringBuilder;
 
+import com.wtc.utils.*;
 
 
 /**
- * This is generates the fix string, and will be used to validate the 
+ * Formates message into valid fix messages
+ * This is generates the fix string, and will be used to validate the
  * the fix string.
  * */
-public class Fix {
+public class Creator {
     private static String SOH = "|";
     private StringBuilder message;      // Do I even need this variable?
     private String trail;       // This one as well... they are function calls.
     private int id;
 
 
-    public Fix() {
+    public Creator() {
         this.message = new StringBuilder();
-         this.id = 0;
+        this.id = 0;
     }
-    public Fix(int id){
+    public Creator(int id){
         this();
         this.id = id;
     }
@@ -29,6 +31,20 @@ public class Fix {
         this.id = ID;
     }
 
+	public String createIOI(String transType, String side, String shares){
+		StringBuilder tmp = new StringBuilder();
+
+		tmp.append(Tags.IOIId.getAction() + "=a" + String.valueOf(this.id)  + SOH);
+		tmp.append(Tags.IOITransType.getAction() + "=" + transType + SOH);
+		tmp.append(Tags.Side.getAction() + "=" + side + SOH);
+		tmp.append(Tags.OrderQTY.getAction() + "=" + "10" + SOH );
+		tmp.append(Tags.Price.getAction() + "=" + "100" + SOH);
+		tmp.append(Tags.IOIShaces.getAction() + "=" + shares + SOH);
+
+		return createMessage("6", tmp.toString());
+
+	}
+
     /**
      * Creates the message string in FIX formate.
      *
@@ -36,14 +52,13 @@ public class Fix {
      * later on it should take some information, like the
      * recieverId and the message type and the actual message.
      * */
-    public String createMessage(){
+    private String createMessage(String msgType, String body){
         String sendingTime =  (LocalTime.now()).toString();
-        String messageType = "A";
         String senderID = String.valueOf(id);
         String targetID = "0";
 
-
-        createHeader(messageType, senderID, targetID, sendingTime);
+        createHeader(msgType, senderID, targetID, sendingTime);
+		message.append(body);
         createTrail();
 
         return this.message.toString();
@@ -52,28 +67,35 @@ public class Fix {
 
     /**
      * This creates the header.
-     * 
+     *
      * For now it is ignorant of the message content.. I'll do that later on.
      * */
     private void createHeader(String msgType, String sID, String tID, String sendingTime){
-        this.message.append(tags.BeginString.getAction() + "=FIX.4.2" + SOH);
-        this.message.append(tags.BodyLength.getAction() + "=BL" + SOH);
-        this.message.append(tags.MsgType.getAction() + "=" + msgType + SOH);
-        this.message.append(tags.SenderCompID.getAction() + "=" + sID + SOH);
-        this.message.append(tags.TargetCompID.getAction() + "=" + tID + SOH);
-        this.message.append(tags.SendingTime.getAction() + "=" + sendingTime + SOH);
+        this.message.append(Tags.BeginString.getAction() + "=FIX.4.2" + SOH);
+        this.message.append(Tags.BodyLength.getAction() + "=BL" + SOH);
+        this.message.append(Tags.MsgType.getAction() + "=" + msgType + SOH);
+        this.message.append(Tags.SenderCompID.getAction() + "=" + sID + SOH);
+        this.message.append(Tags.TargetCompID.getAction() + "=" + tID + SOH);
+        this.message.append(Tags.SendingTime.getAction() + "=" + sendingTime + SOH);
         
         // Calculating the body length.
-        int startPoint = message.indexOf("|", message.indexOf(tags.MsgType.getAction()));
+        int startPoint = message.indexOf("|", message.indexOf(Tags.MsgType.getAction()));
         int BL = message.substring(startPoint).length();
         int bl_index = message.indexOf("BL");
         message.replace(bl_index, bl_index+2, String.valueOf(BL));
     }
 
     private void createTrail(){
-        this.message.append(tags.CheckSum.getAction() + "=CHKSUM" + SOH);
+		int sum = 0;
+
+		for (char c : (message.toString()).toCharArray()){
+			sum += (int) c;
+		}
+		System.out.println(sum);
+		sum %= 256;
+        this.message.append(Tags.CheckSum.getAction() + "=" + String.valueOf(sum) + SOH);
     }
-    
+
 
 }
 

@@ -1,6 +1,6 @@
 package com.wtc;
 
-import com.wtc.fixprotocol.Fix;
+import com.wtc.fixprotocol.Creator;
 
 /**
  * Hello world!
@@ -9,8 +9,8 @@ import com.wtc.fixprotocol.Fix;
 public class App 
 {
     public static void main(String[] args){
-        Fix fix = new Fix();
+		Creator c = new Creator(19);
 
-        System.out.println(fix.createMessage());
+		System.out.println(c.createIOI("N", "1", "S"));
     }
 }

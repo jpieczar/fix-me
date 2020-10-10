@@ -1,3 +1,4 @@
-com/wtc/fixprotocol/Fix.class
+com/wtc/fixprotocol/Creator.class
+com/wtc/utils/Tags.class
 com/wtc/App.class
 com/wtc/fixprotocol/tags.class
