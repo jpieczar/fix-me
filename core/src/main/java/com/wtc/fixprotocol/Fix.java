@@ -1,6 +1,8 @@
 package com.wtc.fixprotocol;
 
 import java.time.LocalTime;
+import java.lang.StringBuilder;
+
 
 
 /**
@@ -9,20 +11,14 @@ import java.time.LocalTime;
  * */
 public class Fix {
     private static String SOH = "|";
-    private String header;
-    private String trail;
+    private StringBuilder message;      // Do I even need this variable?
+    private String trail;       // This one as well... they are function calls.
     private int id;
 
 
     public Fix() {
-        this.header = tags.BeginString + "=FIX.4.2" + SOH; 
-        this.header += tags.BodyLength + "= %s " + SOH;
-        this.header += tags.MsgType + "= %s " + SOH;
-        this.header += tags.SenderCompID + "= %s " + SOH;
-        this.header += tags.TargetCompID + "= %s " + SOH;
-        this.header += tags.MsgSeqNum + "= %s " + SOH;
-        this.header += tags.SendingTime + "= %s " + SOH;
-        this.id = 0;
+        this.message = new StringBuilder();
+         this.id = 0;
     }
     public Fix(int id){
         this();
@@ -45,25 +41,37 @@ public class Fix {
         String messageType = "A";
         String senderID = String.valueOf(id);
         String targetID = "0";
-        String messageSeq = "";
 
-        String bodyLength = "10";
 
-        String message = String.format(createHeader(), 
-                bodyLength, messageType, senderID, targetID,
-                messageSeq, sendingTime);
+        createHeader(messageType, senderID, targetID, sendingTime);
+        createTrail();
+
+        return this.message.toString();
+
+    }
+
+    /**
+     * This creates the header.
+     * 
+     * For now it is ignorant of the message content.. I'll do that later on.
+     * */
+    private void createHeader(String msgType, String sID, String tID, String sendingTime){
+        this.message.append(tags.BeginString.getAction() + "=FIX.4.2" + SOH);
+        this.message.append(tags.BodyLength.getAction() + "=BL" + SOH);
+        this.message.append(tags.MsgType.getAction() + "=" + msgType + SOH);
+        this.message.append(tags.SenderCompID.getAction() + "=" + sID + SOH);
+        this.message.append(tags.TargetCompID.getAction() + "=" + tID + SOH);
+        this.message.append(tags.SendingTime.getAction() + "=" + sendingTime + SOH);
         
-        return message + createTrail();
+        // Calculating the body length.
+        int startPoint = message.indexOf("|", message.indexOf(tags.MsgType.getAction()));
+        int BL = message.substring(startPoint).length();
+        int bl_index = message.indexOf("BL");
+        message.replace(bl_index, bl_index+2, String.valueOf(BL));
     }
 
-    private String createHeader(){
-        return this.header;
-    }
-
-    private String createTrail(){
-        this.trail = tags.CheckSum + "=%s" + SOH;
-
-        return this.trail;
+    private void createTrail(){
+        this.message.append(tags.CheckSum.getAction() + "=CHKSUM" + SOH);
     }
     
 
