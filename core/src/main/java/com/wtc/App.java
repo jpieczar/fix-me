@@ -11,6 +11,6 @@ public class App
     public static void main(String[] args){
         Fix fix = new Fix();
 
-        System.out.println(fix.createHeader());
+        System.out.println(fix.createMessage());
     }
 }
