@@ -1,5 +1,6 @@
 com/wtc/fixprotocol/Creator.class
 com/wtc/utils/Tags.class
 com/wtc/fixprotocol/Validator.class
+com/wtc/fixprotocol/Consumer.class
 com/wtc/App.class
 com/wtc/fixprotocol/tags.class

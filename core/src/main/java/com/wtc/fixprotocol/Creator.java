@@ -57,6 +57,8 @@ public class Creator {
         String senderID = String.valueOf(id);
         String targetID = "0";
 
+		message.delete(0, message.length());
+
         createHeader(msgType, senderID, targetID, sendingTime);
 		message.append(body);
         createTrail();
@@ -90,7 +92,6 @@ public class Creator {
 		for (char c : (message.toString()).toCharArray()){
 			sum += (int) c;
 		}
-		System.out.println(sum);
 		sum %= 256;
         this.message.append(Tags.CheckSum.getAction() + "=" + String.valueOf(sum) + SOH);
     }
@@ -98,25 +99,3 @@ public class Creator {
 
 }
 
-
-enum tags {
-    BeginString  ("8"),
-    BodyLength  ("9"),
-    MsgType  ("35"),
-    SenderCompID  ("49"),
-    TargetCompID  ("56"),
-    MsgSeqNum  ("34"),
-    SendingTime  ("52"),
-
-    CheckSum ("10");
-
-    private String action;
-
-    public String getAction(){
-        return this.action;
-    }
-
-    private tags(String action){
-        this.action = action;
-    }
-}
