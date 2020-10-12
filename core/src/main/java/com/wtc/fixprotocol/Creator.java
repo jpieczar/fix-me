@@ -33,6 +33,7 @@ public class Creator {
 
 	public String createIOI(String transType, String side, String shares){
 		StringBuilder tmp = new StringBuilder();
+		String msgType = "6";
 
 		tmp.append(Tags.IOIId.getAction() + "=a" + String.valueOf(this.id)  + SOH);
 		tmp.append(Tags.IOITransType.getAction() + "=" + transType + SOH);
@@ -42,7 +43,6 @@ public class Creator {
 		tmp.append(Tags.IOIShaces.getAction() + "=" + shares + SOH);
 
 		return createMessage("6", tmp.toString());
-
 	}
 
     /**
@@ -62,7 +62,6 @@ public class Creator {
         createTrail();
 
         return this.message.toString();
-
     }
 
     /**
