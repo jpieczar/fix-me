@@ -6,10 +6,9 @@ import jmichael.fixme.core.enums.Operation;
 import jmichael.fixme.core.exception.FixTagException;
 
 import java.nio.channels.AsynchronousSocketChannel;
+import static jmichael.fixme.core.FixHandler.*;
 
 public class FixTagValidator extends MessageIDHandler {
-
-    String RED = "\u001B[31m";
 
     public FixTagValidator(String id, String name) {
         super(id, name);

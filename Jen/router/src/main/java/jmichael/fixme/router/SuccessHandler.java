@@ -13,14 +13,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.atomic.AtomicInteger;
 
+import static jmichael.fixme.core.FixHandler.*;
+
 class SuccessHandler implements CompletionHandler<AsynchronousSocketChannel, Object> {
 
-
-    public static final String CYAN = "\u001B[36m";
-    public static final String BRIGHT_BLUE   = "\u001B[36m";
-    public static final String BRIGHT_GREEN  = "\u001B[92m";
-    public static final String RED = "\u001B[31m";
-    public static final String RESET  = "\u001B[0m";
     private final ExecutorService executor = Executors.newFixedThreadPool(5);
     private final AsynchronousServerSocketChannel clientListener;
     private final Map<String, AsynchronousSocketChannel> routingTable;
