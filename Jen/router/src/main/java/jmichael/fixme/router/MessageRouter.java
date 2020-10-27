@@ -9,6 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import jmichael.fixme.core.FixHandler;
+import static jmichael.fixme.core.FixHandler.*;
 import jmichael.fixme.core.DataHandler;
 import jmichael.fixme.core.messages.SystemMailMan;
 import jmichael.fixme.core.validators.AllFixTagsValidator;
@@ -19,12 +20,8 @@ import jmichael.fixme.router.handler.MessageHandler;
 
 public class MessageRouter {
 
-    public static final String RESET_COLOUR  = "\u001B[0m";
-    public static final String BRIGHT_BG_WHITE  = "\u001B[107m";
-    public static final String RED = "\u001B[31m";
-    public static final String BRIGHT_BLUE   = "\u001B[36m";
-    public static final String BRIGHT_GREEN  = "\u001B[92m";
-    private final AtomicInteger id = new AtomicInteger(FixHandler.START_ID);
+
+    private final AtomicInteger id = new AtomicInteger(1);
     private final Map<String, AsynchronousSocketChannel> routingTable = new ConcurrentHashMap<>();
     private final Map<String, String> failedToSendMessages = new ConcurrentHashMap<>();
 
@@ -32,7 +29,7 @@ public class MessageRouter {
         System.out.println(BRIGHT_BLUE+BRIGHT_BG_WHITE +"Message Router Status   ::" + " [ON]");
         System.out.println(BRIGHT_BLUE+BRIGHT_BG_WHITE +"Market Server port      ::" + " [5001]");
         System.out.println(BRIGHT_BLUE+BRIGHT_BG_WHITE +"Broker Server port      ::" + " [5000]");
-        System.out.print(RESET_COLOUR);
+        System.out.print(RESET);
 
         try {
             final MailMan mailMan = getMessageHandler();
@@ -67,7 +64,7 @@ public class MessageRouter {
                 final AsynchronousSocketChannel targetChannel = routingTable.get(targetName);
                 if (targetChannel != null) {
                     System.out.println(BRIGHT_GREEN+ " [Message] " + targetName + " - [SENDING]");
-                    System.out.print(RESET_COLOUR);
+                    System.out.print(RESET);
                     DataHandler.sendMessage(targetChannel, failedToSendMessages.get(targetName));
                     return true;
                 }

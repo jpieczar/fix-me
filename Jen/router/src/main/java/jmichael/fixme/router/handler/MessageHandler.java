@@ -1,6 +1,7 @@
 package jmichael.fixme.router.handler;
 
 import jmichael.fixme.core.FixHandler;
+import static jmichael.fixme.core.FixHandler.*;
 import jmichael.fixme.core.enums.FixTagIdentifiers;
 import jmichael.fixme.core.DataHandler;
 import jmichael.fixme.core.messages.MainMessageHandler;
@@ -8,12 +9,10 @@ import jmichael.fixme.core.messages.MainMessageHandler;
 import java.nio.channels.AsynchronousSocketChannel;
 import java.util.Map;
 
-import static jmichael.fixme.router.MessageRouter.BRIGHT_BLUE;
-import static jmichael.fixme.router.MessageRouter.BRIGHT_GREEN;
 
 public class MessageHandler extends MainMessageHandler {
 
-    public static final String RED = "\u001B[31m";
+
     private final Map<String, AsynchronousSocketChannel> routingTable;
     private final Map<String, String> failedMessages;
 
@@ -32,7 +31,7 @@ public class MessageHandler extends MainMessageHandler {
             DataHandler.sendMessage(targetChannel, message);
             super.validateMessage(clientChannel, message);
         } else {
-            DataHandler.sendInternalMessage(clientChannel,
+            DataHandler.sendSystemMessage(clientChannel,
                     RED+ "\n[ERROR] :: No id found that matches " + targetName + "\n" + "[RESENDING]...");
             failedMessages.put(targetName, message);
         }

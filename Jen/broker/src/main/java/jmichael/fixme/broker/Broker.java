@@ -7,14 +7,13 @@ import jmichael.fixme.core.FixHandler;
 import jmichael.fixme.core.DataHandler;
 import jmichael.fixme.core.exception.MessageValidationException;
 import jmichael.fixme.core.messages.MailMan;
-
+import static jmichael.fixme.core.FixHandler.*;
 import java.util.Scanner;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
 public class Broker extends ClientHandler {
 
-    public static final String CYAN = "\u001B[36m";
 
     private Broker(String bName) {
         super(5000, "B" + bName);

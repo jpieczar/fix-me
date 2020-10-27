@@ -5,12 +5,12 @@ import jmichael.fixme.core.enums.FixTagIdentifiers;
 import jmichael.fixme.core.enums.BrokerResponse;
 import jmichael.fixme.core.exception.FixTagException;
 import jmichael.fixme.core.messages.MainMessageHandler;
+import static jmichael.fixme.core.FixHandler.*;
 
 import java.nio.channels.AsynchronousSocketChannel;
 
 public class ResponseValidator extends MainMessageHandler {
 
-    String RED = "\u001B[31m";
 
     @Override
     public void validateMessage(AsynchronousSocketChannel clientChannel, String message) {

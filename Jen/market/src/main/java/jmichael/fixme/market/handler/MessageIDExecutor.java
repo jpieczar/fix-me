@@ -6,14 +6,11 @@ import jmichael.fixme.core.enums.Operation;
 
 import java.nio.channels.AsynchronousSocketChannel;
 import java.util.Map;
+import static jmichael.fixme.core.FixHandler.*;
 
 public class MessageIDExecutor extends MessageIDHandler {
 
     private final Map<String, Integer> stockItems;
-
-    String RED = "\u001B[31m";
-    public static final String BRIGHT_BLUE   = "\u001B[36m";
-    public static final String BRIGHT_GREEN  = "\u001B[92m";
 
     public MessageIDExecutor(String clientId, String name, Map<String, Integer> stockItems) {
         super(clientId, name);
@@ -29,7 +26,7 @@ public class MessageIDExecutor extends MessageIDHandler {
             final String type = FixHandler.getValueByTag(message, FixTagIdentifiers.OPERATION);
             if (type.equals(Operation.Buy.toString())) {
                 if (marketQuantity < quantity) {
-                    rejectedMessage(clientChannel, message, RED+"Not enough stock");
+                    rejectedMessage(clientChannel, message, "Not enough stock");
                     return;
                 } else {
                     stockItems.put(stockItem, marketQuantity - quantity);
@@ -37,10 +34,12 @@ public class MessageIDExecutor extends MessageIDHandler {
             } else {
                 stockItems.put(stockItem, marketQuantity + quantity);
             }
-            System.out.println(BRIGHT_BLUE +"[STOCK] :: " + stockItems.toString());
-            executedMessage(clientChannel, message, BRIGHT_GREEN+"[OK]");
+
+            String items_list = stockItems.toString().replaceAll(", ", "|");
+            System.out.println(BRIGHT_BLUE +"[STOCK] :: " + items_list.replace("{", "[").replace("}", "]"));
+            executedMessage(clientChannel, message,"[OK]");
         } else {
-            rejectedMessage(clientChannel, message, RED+"\n[ERROR] :: " + stockItem + " Chosen stock is not traded on this market");
+            rejectedMessage(clientChannel, message, "Invalid stock");
         }
     }
 
